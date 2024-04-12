@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -33,8 +33,7 @@ class PostDetail(DetailView):
 
 
 
-@login_required
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
     permission_required = ('main.add_post',)
     form_class = PostForm
     model = Post
@@ -47,7 +46,6 @@ class PostCreate(CreateView):
         return super().form_valid(form)
 
 
-@login_required
 class PostUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('main.change_post',)
     form_class = PostForm
@@ -56,7 +54,6 @@ class PostUpdate(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('posts_list')
 
 
-@login_required
 class PostDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('main.delete_post',)
     model = Post
@@ -91,7 +88,6 @@ class ResponseDetail(DetailView):
     queryset = Response.objects.all()
 
 
-@login_required
 class ResponseUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('main.change_response',)
     form_class = ResponseForm
@@ -99,7 +95,6 @@ class ResponseUpdate(PermissionRequiredMixin, UpdateView):
     template_name = 'response_edit.html'
 
 
-@login_required
 class ResponseDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('main.delete_response',)
     model = Response
