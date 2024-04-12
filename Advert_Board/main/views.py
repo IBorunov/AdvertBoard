@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from Advert_Board.settings import DEFAULT_FROM_EMAIL
+from main.filters import ResponseFilter
 from main.forms import PostForm, ResponseForm
 from main.models import Post, Response
 
@@ -62,7 +63,7 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
         form_class = ResponseForm
         model = Response
         template_name = 'response_edit.html'
-        
+
     def form_valid(self, form):
         resp = form.save(commit=False)
         resp.user = self.request.user.user
@@ -109,7 +110,7 @@ class ResponseSearch(ListView):
 
     def get_queryset(self):
         queryset = Response.objects.filter(post__author_id=self.request.user.pk)
-        self.filterset = Response_Filter(self.request.GET, queryset, request=self.request.user.pk)
+        self.filterset = ResponseFilter(self.request.GET, queryset, request=self.request.user.pk)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
