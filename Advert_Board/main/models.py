@@ -34,7 +34,6 @@ class Post(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY)
     title = models.CharField(max_length=250, unique=True)
     content = RichTextField()
-    is_accepted = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -51,10 +50,11 @@ class Response(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
     text = models.TextField()
     time_in = models.DateTimeField(auto_now_add=True)
+    is_accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        email = self.author.email
-        username = self.author.username
+        email = self.user.email
+        username = self.user.username
         return f'{self.title}: {email} : {username}'
 
     def get_absolute_url(self):
