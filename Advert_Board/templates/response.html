@@ -5,11 +5,8 @@ Comment
 
 {% block content %}
 
-<h1>{{ com.post}}</h1>
-<h1>{{ com.user}}</h1>
-<h4>{{ com.comment_text }}</h4>
-
-<a href="{% url 'agreed' %}">Принять</a>
-<a href="{% url 'com_delete' com.id %}">Отклонить</a>
+<h1>{{ response.post}}</h1>
+<h1>{{ response.user}}</h1>
+<h4>{{ response.text }}</h4>
 
 {% endblock content %}

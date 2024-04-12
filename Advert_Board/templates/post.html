@@ -5,9 +5,12 @@ Post
 {% endblock title %}
 
 {% block content %}
-<h1>{{ post.head_name}}</h1>
+<h1>{{ post.title}}</h1>
 <h4>{{ post.author }}</h4>
-<h2>{{ post.article_text}}</h2>
-<a href="{% url 'com_create' %}">Откликнуться!</a>
+<h2>{{ post.content}}</h2>
+
+{% if authenticated %}
+<a href="{% url 'response_create' %}">Откликнуться!</a>
+{% endif %}
 <a href="{% url 'coms_list' %}">Отклики</a>
 {% endblock content %}

@@ -26,6 +26,11 @@ class PostDetail(DetailView):
     context_object_name = 'post'
     queryset = Post.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['authenticated'] = self.request.user.is_authenticated
+        return context
+
 
 
 @login_required
@@ -58,11 +63,12 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list')
 
-    class ResponseCreate(CreateView):
-        permission_required = ('announcement.add_comment',)
-        form_class = ResponseForm
-        model = Response
-        template_name = 'response_edit.html'
+
+class ResponseCreate(CreateView):
+    permission_required = ('announcement.add_comment',)
+    form_class = ResponseForm
+    model = Response
+    template_name = 'response_edit.html'
 
     def form_valid(self, form):
         resp = form.save(commit=False)
@@ -101,11 +107,11 @@ class ResponseDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('posts_list')
 
 
-class ResponseSearch(ListView):
+class ResponseList(ListView):
     model = Response
     ordering = '-time_in'
-    template_name = 'resp_search.html'
-    context_object_name = 'resp_search'
+    template_name = 'responses.html'
+    context_object_name = 'responses'
     paginate_by = 10
 
     def get_queryset(self):
