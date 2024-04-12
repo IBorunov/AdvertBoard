@@ -1,7 +1,7 @@
 from django.urls import path
 
 from main.views import PostsList, PostDetail, PostCreate, PostUpdate, PostDelete, ResponseCreate, ResponseDetail, \
-    ResponseUpdate, ResponseDelete, ResponseList
+    ResponseUpdate, ResponseDelete, ResponseList, accept_response
 
 urlpatterns = [
     path('', PostsList.as_view(), name='posts_list'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('resp/<int:pk>/edit/', ResponseUpdate.as_view(), name='response_update'),
     path('resp/<int:pk>/delete/', ResponseDelete.as_view(), name='response_delete'),
     path('responses/', ResponseList.as_view(), name='response_list'),
+    path('resp/<int:pk>/accept/', accept_response, name='accept_response'),
 ]
