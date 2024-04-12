@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -9,7 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from Advert_Board.settings import DEFAULT_FROM_EMAIL
 from main.filters import ResponseFilter
-from main.forms import PostForm, ResponseForm
+from main.forms import PostForm, ResponseForm, ProfileForm
 from main.models import Post, Response
 
 
@@ -42,7 +43,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        post.author = self.request.user.author
+        post.author = self.request.user
         post.save()
         return super().form_valid(form)
 
@@ -127,3 +128,9 @@ def accept_response(request, pk):
     response.is_accepted = True
     response.save()
     return redirect('response_list')
+
+class ProfileUpdate(LoginRequiredMixin, UpdateView):
+    form_class = ProfileForm
+    model = User
+    template_name = 'account/profile_edit.html'
+    success_url = '/'
