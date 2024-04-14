@@ -1,19 +1,23 @@
 from django.urls import path
 
-from main.views import PostsList, PostDetail, PostCreate, PostUpdate, PostDelete, ResponseCreate, ResponseDetail, \
-    ResponseUpdate, ResponseDelete, ResponseList, accept_response, ProfileUpdate
+from main.views import PostsList, PostDetail, PostCreate, PostUpdate, PostDelete, ResponseList, accept_response, \
+    ProfileUpdate, CategoryView, MyPostsList, ResponseCreate, delete_response
 
+# ResponseCreate, ResponseDetail, ResponseUpdate, ResponseDelete,
 urlpatterns = [
     path('', PostsList.as_view(), name='posts_list'),
+    path('my_posts/', MyPostsList.as_view(), name='my_posts'),
     path('<int:pk>', PostDetail.as_view(), name='post_detail'),
     path('create/', PostCreate.as_view(), name='post_create'),
     path('<int:pk>/edit/', PostUpdate.as_view(), name='post_update'),
     path('<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
-    path('resp/create/', ResponseCreate.as_view(), name='response_create'),
-    path('resp/<int:pk>/', ResponseDetail.as_view(), name='response_detail'),
-    path('resp/<int:pk>/edit/', ResponseUpdate.as_view(), name='response_update'),
-    path('resp/<int:pk>/delete/', ResponseDelete.as_view(), name='response_delete'),
-    path('responses/', ResponseList.as_view(), name='response_list'),
+
+    path('my_responses/', ResponseList.as_view(), name='my_responses'),
+    path('<int:pk>/respond/', ResponseCreate.as_view(), name='respond'),
+    path('resp/<int:pk>/delete/', delete_response, name='delete_response'),
     path('resp/<int:pk>/accept/', accept_response, name='accept_response'),
+
     path('profile/<int:pk>/', ProfileUpdate.as_view(), name='profile_edit'),
+
+    path('category/<str:category>', CategoryView.as_view(), name='category_list'),
 ]

@@ -1,0 +1,59 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    My responses
+{% endblock title %}
+
+{% block content %}
+ <h2>Фильтрация откликов по объявлениям</h2>
+    <br>
+    <form action="" method="get">
+        <h5>{{ filterset.form.as_p }}</h5>
+        <input class="btn btn-secondary" type="submit" value="Найти" />
+    </form>
+    <br><br>
+    <h5>Количество найденных откликов: {{ page_obj.paginator.count }}</h5>
+    <br><br>
+
+    <h2>Мои отклики</h2>
+<hr>
+    <br>
+
+    {% if my_responses %}
+        {% for response in my_responses %}
+
+            <h4> Объявление: {{ response.post.title}}</h4>
+            <br>
+            <h5>Отклик: {{ response.text }}</h5>
+            <table width="100%">
+                <tr>
+                    <td width="200"><div>{{ response.time_in|date:'d M Y' }}</div>
+                        <div>Автор: {{ response.user.username}}</div>
+                    </td>
+                    <td align="left">
+                        {% if response.is_accepted %}
+                        <p>Отклик принят</p>
+                        {% else %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <a style="text-decoration: none" href="{% url 'accept_response' response.id %}">
+                                <input class="btn btn-sm btn-light btn-outline-info"
+                                       type="button" value="Принять" />
+                            </a>
+                            <a style="text-decoration: none" href="{% url 'delete_response' response.id %}">
+                                <input id="deleteButton" class="btn btn-sm btn-light btn-outline-info"
+                                       type="button" value="Удалить" />
+                            </a>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+<hr>
+        <br><br><br>
+        {% endfor %}
+    {% else %}
+        <h4>Нет откликов</h4>
+    {% endif %}
+
+{% endblock content %}

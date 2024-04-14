@@ -1,0 +1,29 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+   <h1>Объявления по категории "{{category}}"</h1>
+   <hr>
+   <br><br><br>
+   {% if category_list %}
+       {% for post in category_list %}
+           <hr>
+           <h3>{{ post.title }}</h3>,
+           {{ post.content | safe}}<br>
+           Автор: <b>{{ post.author }}</b><br>
+           Категория: {{ post.category }}<br>
+           дата создания: {{ post.time_in|date:'d M Y' }}
+           <hr>
+       {% endfor %}
+   {% else %}
+       <h2>Ничего нет!</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+   {% endif %}
+{% endblock content %}

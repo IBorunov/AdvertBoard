@@ -11,9 +11,15 @@ class PostForm(forms.ModelForm):
 
 
 class ResponseForm(forms.ModelForm):
+    text = forms.CharField(
+        min_length=10,
+        max_length=1000,
+        widget=forms.Textarea({'cols': 70, 'rows': 3})
+    )
+
     class Meta:
         model = Response
-        fields = ['post', 'text']
+        fields = ['text']
 
 
 class ProfileForm(forms.ModelForm):

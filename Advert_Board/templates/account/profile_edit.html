@@ -7,8 +7,10 @@
         <div>Вы можете создавать объявления и оставлять отклики.</div>
     <hr>
     <div class="text-center" >
+        <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="/my_posts/">Мои объявления</a></button>
+        <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="/my_responses/">Отклики на мои объявления</a></button>
         <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="/create/">Добавить объявление</a></button>
-        <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="/accounts/logout/">Выйти</a></button>
+
     </div>
     <br><br>
 <h4>Ваши данные:</h4>
@@ -16,6 +18,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input class="btn btn-lg btn-secondary" type="submit" value="Сохранить" />
+    <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="/accounts/logout/">Выйти</a></button>
 
 </form>
 

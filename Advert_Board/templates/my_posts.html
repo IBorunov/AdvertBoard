@@ -6,33 +6,26 @@ Comments
 {% endblock title %}
 
 {% block content %}
-   <h1>Все отклики!</h1>
-   <form action="" method="get">
-       {{ filterset.form.as_p }}
-       <input type="submit" value="Найти" />
-   </form>
-   <hr>
-   {% if responses %}
-       <table>
-           <tr>
-               <td>Автор отклика</td>
-               <td>Автор поста</td>
-               <td>Пост</td>
-               <td>Дата публикации</td>
-               <td>Текст</td>
+   <h1>Мои объявления!</h1>
 
-           </tr>
-           {% for response in responses %}
-           <tr>
-               <td>{{ response.user.username }}</td>
-               <td>{{ response.post.author.username }}</td>
-               <td>{{ response.post.title }} </td>
-               <td>{{ response.time_in|date:'d M Y' }}</td>
-               <td>{{ response.text|truncatechars:20}}</td>
-           </tr>
+   <hr>
+   {% if my_posts %}
+           {% for post in my_posts %}
+
+
+               <h3> <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>,
+               {{ post.content | safe}}<br>
+                Автор: <b>{{ post.author }}</b><br>
+               Категория: <b>{{ post.category }}</b><br>
+                дата создания: <b>{{ post.time_in|date:'d M Y' }}</b>
+<div class="text-center" >
+        <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="{% url 'post_delete' post.id %}">Удалить</a></button>
+        <button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="{% url 'post_update' post.id %}">Изменить</a></button>
+    </div>
+<hr>
+<br><br>
            {% endfor %}
 
-       </table>
    {% else %}
        <h2>Ничего нет!</h2>
 

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -19,8 +19,19 @@ class PostsList(ListView):
     ordering = '-time_in'
     template_name = 'posts.html'
     context_object_name = 'posts'
-    paginate_by = 10
+    paginate_by = 5
 
+class MyPostsList(ListView):
+    model = Post
+    ordering = '-time_in'
+    template_name = 'my_posts.html'
+    context_object_name = 'my_posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = Post.objects.filter(author_id=self.request.user.pk)
+        self.filterset = ResponseFilter(self.request.GET, queryset, request=self.request.user.pk)
+        return self.filterset.qs
 
 class PostDetail(DetailView):
     model = Post
@@ -36,7 +47,6 @@ class PostDetail(DetailView):
 
 
 class PostCreate(LoginRequiredMixin, CreateView):
-    permission_required = ('main.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -48,31 +58,56 @@ class PostCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('main.change_post',)
+class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
     success_url = reverse_lazy('posts_list')
 
 
-class PostDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('main.delete_post',)
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list')
 
 
-class ResponseCreate(CreateView):
-    permission_required = ('announcement.add_comment',)
+class ResponseList(LoginRequiredMixin, ListView):
+    model = Response
+    template_name = 'my_responses.html'
+    context_object_name = 'my_responses'
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Get all the responds to user's adverts"""
+        queryset = Response.objects.filter(post_id__author_id=self.request.user).order_by('-time_in')
+        self.filterset = ResponseFilter(self.request.GET, queryset, request=self.request.user)
+        return self.filterset.qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
+class ResponseCreate(LoginRequiredMixin, CreateView):
     form_class = ResponseForm
     model = Response
-    template_name = 'response_edit.html'
+    template_name = 'respond.html'
+    success_url = reverse_lazy('posts_list')
+
+    def get_context_data(self, **kwargs):
+        """Get correct post from url-path"""
+        context = super().get_context_data(**kwargs)
+        context['post'] = Post.objects.get(id=self.kwargs['pk'])
+        return context
 
     def form_valid(self, form):
         resp = form.save(commit=False)
-        resp.user = self.request.user.user
+        resp.user = self.request.user
+        resp.post = Post.objects.get(id=self.kwargs['pk'])
         resp.save()
+
+
         send_mail(
             subject=f'На Ваш пост {resp.post.title} откликнулся {resp.user.username}.',
             message=resp.text,
@@ -83,54 +118,37 @@ class ResponseCreate(CreateView):
         return super().form_valid(form)
 
 
-class ResponseDetail(DetailView):
-    model = Response
-    template_name = 'response.html'
-    context_object_name = 'response'
-    queryset = Response.objects.all()
-
-
-class ResponseUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('main.change_response',)
-    form_class = ResponseForm
-    model = Response
-    template_name = 'response_edit.html'
-
-
-class ResponseDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('main.delete_response',)
-    model = Response
-    template_name = 'resp_delete.html'
-    success_url = reverse_lazy('posts_list')
-
-
-class ResponseList(ListView):
-    model = Response
-    ordering = '-time_in'
-    template_name = 'responses.html'
-    context_object_name = 'responses'
-    paginate_by = 10
-
-    def get_queryset(self):
-        queryset = Response.objects.filter(post__author_id=self.request.user.pk)
-        self.filterset = ResponseFilter(self.request.GET, queryset, request=self.request.user.pk)
-        return self.filterset.qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['time_now'] = datetime.utcnow()
-        context['filterset'] = self.filterset
-        return context
-
 @login_required
 def accept_response(request, pk):
     response = Response.objects.get(id=pk)
     response.is_accepted = True
     response.save()
-    return redirect('response_list')
+    return redirect('my_responses')
+
+@login_required
+def delete_response(request, pk):
+    Response.objects.get(id=pk).delete()
+    return redirect('my_responses')
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
     form_class = ProfileForm
     model = User
     template_name = 'account/profile_edit.html'
     success_url = '/'
+
+
+class CategoryView(ListView):
+    model = Post
+    template_name = 'category_list.html'
+    context_object_name = 'category_list'
+
+    def get_queryset(self):
+        object = get_object_or_404(Post, category=self.kwargs['category'])
+        self.category = object.category
+        queryset = Post.objects.filter(category=self.category)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+        context['category'] = self.category
+        return context

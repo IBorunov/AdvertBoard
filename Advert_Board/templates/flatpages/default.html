@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Bare - Start Bootstrap Template</title>
+        <title>Главная</title>
         <!-- Favicon-->
         <!-- Core theme CSS (includes Bootstrap)-->
         {% load static %}
@@ -15,7 +15,7 @@
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
             <div class="container">
-                <a class="navbar-brand" href="/">SkillFactory</a>
+                <a class="navbar-brand" href="/">Доска объявлений</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarResponsive"
                         aria-controls="navbarResponsive" aria-expanded="false"
@@ -24,7 +24,7 @@
                 </button>
               <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="/responses/">Отклики</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/my_responses/">Отклики</a></li>
                         <li class="nav-item"><a class="nav-link" href="/create/">Добавить объявление</a></li>
                         {% if request.user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'profile_edit' request.user.id %}">Профиль</a></li>

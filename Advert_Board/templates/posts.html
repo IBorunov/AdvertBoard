@@ -7,16 +7,19 @@ Posts
 
 {% block content %}
    <h1>Все объявления</h1>
-   <hr>
-<br>
+
+<br><br><br>
    {% if posts %}
            {% for post in posts %}
-<hr>
-               Автор: <b>{{ post.author }}</b><br>
-               <b> {{ post.title }}</b>, дата создания: {{ post.time_in|date:'d M Y' }}
-               Категория: {{ post.category }}<br>
+
+
+               <h3> <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>,
                {{ post.content | safe}}<br>
+                Автор: <b>{{ post.author }}</b><br>
+               Категория: <b>{{ post.category }}</b><br>
+                дата создания: <b>{{ post.time_in|date:'d M Y' }}</b>
 <hr>
+<br><br>
            {% endfor %}
 
    {% else %}

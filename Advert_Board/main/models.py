@@ -37,9 +37,8 @@ class Post(models.Model):
 
 
     def __str__(self):
-        email = self.author.email
         username = self.author.username
-        return f'{self.title}: {email} : {username}'
+        return f'{self.title} by {username}'
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
@@ -53,9 +52,7 @@ class Response(models.Model):
     is_accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        email = self.user.email
         username = self.user.username
-        return f'{self.title}: {email} : {username}'
+        return f'{self.text} from {username}'
 
-    def get_absolute_url(self):
-        return reverse('com_detail', args=[str(self.id)])
+

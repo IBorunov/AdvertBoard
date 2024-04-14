@@ -6,11 +6,13 @@ Post
 
 {% block content %}
 <h1>{{ post.title}}</h1>
-<h4>{{ post.author }}</h4>
-<h2>{{ post.content}}</h2>
+<h4>by {{ post.author }}</h4>
+<h2>{{ post.content | safe}}</h2>
 
 {% if authenticated %}
-<a href="{% url 'response_create' %}">Откликнуться!</a>
+ <div class="text-center" >
+
+<button class="btn btn-lg btn-secondary"><a style="text-decoration: none; color: white" href="{{ post.pk }}/respond/">Откликнуться!</a></button>
 {% endif %}
-<a href="/responses/">Отклики</a>
+ </div>
 {% endblock content %}
