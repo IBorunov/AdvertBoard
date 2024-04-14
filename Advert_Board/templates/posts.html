@@ -16,7 +16,7 @@ Posts
                <h3> <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>,
                {{ post.content | safe}}<br>
                 Автор: <b>{{ post.author }}</b><br>
-               Категория: <b>{{ post.category }}</b><br>
+               Категория: <b><a href="{% url 'category_list' post.category %}">{{ post.category }}</a></b><br>
                 дата создания: <b>{{ post.time_in|date:'d M Y' }}</b>
 <hr>
 <br><br>

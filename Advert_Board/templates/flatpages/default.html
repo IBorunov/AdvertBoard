@@ -5,7 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Главная</title>
+
+        <title>
+            {% block title %}
+            {{ flatpage.title }}
+            {% endblock title %}
+        </title>
+
         <!-- Favicon-->
         <!-- Core theme CSS (includes Bootstrap)-->
         {% load static %}
