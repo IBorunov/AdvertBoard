@@ -1,9 +1,6 @@
-import django_filters
-from django import forms
 from django_filters import ModelChoiceFilter, FilterSet
 
 from .models import Response, Post
-from urllib import request
 
 
 class ResponseFilter(FilterSet):

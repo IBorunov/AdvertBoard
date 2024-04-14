@@ -3,7 +3,6 @@ from django.urls import path
 from main.views import PostsList, PostDetail, PostCreate, PostUpdate, PostDelete, ResponseList, accept_response, \
     ProfileUpdate, CategoryView, MyPostsList, ResponseCreate, delete_response, ConfirmUser
 
-# ResponseCreate, ResponseDetail, ResponseUpdate, ResponseDelete,
 urlpatterns = [
     path('', PostsList.as_view(), name='posts_list'),
     path('my_posts/', MyPostsList.as_view(), name='my_posts'),
