@@ -1,7 +1,7 @@
 from django.urls import path
 
 from main.views import PostsList, PostDetail, PostCreate, PostUpdate, PostDelete, ResponseList, accept_response, \
-    ProfileUpdate, CategoryView, MyPostsList, ResponseCreate, delete_response
+    ProfileUpdate, CategoryView, MyPostsList, ResponseCreate, delete_response, ConfirmUser
 
 # ResponseCreate, ResponseDetail, ResponseUpdate, ResponseDelete,
 urlpatterns = [
@@ -20,4 +20,6 @@ urlpatterns = [
     path('profile/<int:pk>/', ProfileUpdate.as_view(), name='profile_edit'),
 
     path('category/<str:category>', CategoryView.as_view(), name='category_list'),
+
+    path('confirm/', ConfirmUser.as_view(), name='confirm_user'),
 ]

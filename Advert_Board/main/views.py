@@ -4,14 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from Advert_Board.settings import DEFAULT_FROM_EMAIL
 from main.filters import ResponseFilter
-from main.forms import PostForm, ResponseForm, ProfileForm
-from main.models import Post, Response
+from main.forms import PostForm, ResponseForm, ProfileForm, CommonSignupForm
+from main.models import Post, Response, Verification_Code
 
 
 class PostsList(ListView):
@@ -152,3 +152,23 @@ class CategoryView(ListView):
         context = super(CategoryView, self).get_context_data(**kwargs)
         context['category'] = self.category
         return context
+
+
+class ConfirmUser(UpdateView):
+    model = Verification_Code
+    form_class = CommonSignupForm
+    context_object_name = 'confirm_user'
+
+    def post(self, request, *args, **kwargs):
+        if 'code' in request.POST:
+            code_obj = Verification_Code.objects.filter(number=request.POST['code'])
+            if code_obj.exists():
+                user = User.objects.get(id=code_obj[0].user_id.id)
+                user.is_active = True
+                user.save()
+                code_obj[0].number = None
+                code_obj[0].save()
+                return redirect('/')
+            else:
+                return render(self.request, template_name='invalid_code.html')
+        return redirect('/')

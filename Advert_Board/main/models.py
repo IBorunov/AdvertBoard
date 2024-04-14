@@ -56,3 +56,9 @@ class Response(models.Model):
         return f'{self.text} from {username}'
 
 
+class Verification_Code(models.Model):
+    number = models.CharField(max_length=15, blank=True, null=True, verbose_name='code')
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='user')
+
+    def __str__(self):
+        return self.number
