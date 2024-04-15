@@ -6,7 +6,9 @@ from django.core.mail import send_mail
 from Advert_Board.settings import DEFAULT_FROM_EMAIL
 from .models import Notification
 
-
+"""Сигналы для отправки уведомлений всем пользователям.
+ Легко настроить под конкретные нужды, добавив новые функции
+ (напр. notify_admins, managers etc)"""
 @receiver(post_save, sender=Notification)
 def notify_all_users(sender, instance, created, **kwargs):
     if created:
