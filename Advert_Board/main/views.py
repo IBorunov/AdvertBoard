@@ -122,11 +122,28 @@ def accept_response(request, pk):
     response = Response.objects.get(id=pk)
     response.is_accepted = True
     response.save()
+
+    send_mail(
+        subject=f' Ваш отклик был принят!',
+        message=response.text,
+        from_email=DEFAULT_FROM_EMAIL,
+        recipient_list=[response.user.email]
+    )
+
     return redirect('my_responses')
+
+
 
 @login_required
 def delete_response(request, pk):
-    Response.objects.get(id=pk).delete()
+    response = Response.objects.get(id=pk).delete()
+
+    send_mail(
+        subject=f' Ваш отклик был отклонен.',
+        message=response.text,
+        from_email=DEFAULT_FROM_EMAIL,
+        recipient_list=[response.user.email]
+    )
     return redirect('my_responses')
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
