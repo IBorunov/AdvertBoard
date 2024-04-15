@@ -234,4 +234,3 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 SITE_ID = 1
-SITE_URL = 'http://127.0.0.1:9000'
