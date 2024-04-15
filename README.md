@@ -9,4 +9,4 @@
 — Sending mailings to users through the admin-panel.
 
 # Made with Django 5.0
-## All the pip requirements can be fpund in pip requirements.txt
+## All the pip requirements can be found in pip requirements.txt
